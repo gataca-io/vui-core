@@ -1,0 +1,100 @@
+name: Golang CI
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    name: Go-Analysis
+    runs-on: ubuntu-18.04
+    outputs:
+      job-status: ${{ job.status }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Go 1.16
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16
+
+      - name: Lint
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.42.1
+          golangci-lint run --timeout 5m
+
+      - name: Static Analysis
+        run: |
+          go get github.com/securego/gosec/cmd/gosec
+          gosec ./...
+          go get honnef.co/go/tools/cmd/staticcheck
+          staticcheck -f json ./...
+#          go get github.com/fzipp/gocyclo
+#          gocyclo -over 25 .
+
+      - name: Go Test
+        run: go test -v -cover -covermode=atomic ./...
+
+      # - name: Integration test
+      #   run: |
+      #     go mod vendor
+      #     go get github.com/cucumber/godog/cmd/godog
+      #     GO111MODULE=off godog
+
+      - name: Leaks Scan
+        uses: zricethezav/gitleaks-action@master
+
+      - name: Dependency Scan
+        uses: AppThreat/sast-scan-action@master
+        with:
+          output: reports
+          type: depscan
+
+      - name: Upload reports
+        uses: actions/upload-artifact@v1
+        with:
+          name: reports
+          path: reports
+
+#  manage:
+#    name: Manage Project
+#    needs: test
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Login
+#        uses: atlassian/gajira-login@master
+#        env:
+#          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+#          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
+#          JIRA_API_TOKEN: ${{ secrets.JIRA_TOKEN }}
+#
+#      - name: Find Issue in commit messages
+#        uses: cybervoid/gajira-get-issue@v1.0
+#        with:
+#          input-text: ${{ github.ref }}
+#        env:
+#          JIRA_API_TOKEN: ${{ secrets.JIRA_TOKEN }}
+
+  notify:
+    needs: test
+    name: Notify
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Get PR number
+        run: |
+          echo "PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")" >> $GITHUB_ENV
+          echo "JOB STATUS: ${{ needs.test.outputs.job-status }}"
+          if [ "${{ needs.test.outputs.job-status }}" == "success" ]; then
+            echo "TEXT_RESULT=READY" >> $GITHUB_ENV
+          else
+            echo "TEXT_RESULT=INVALID" >> $GITHUB_ENV
+          fi
+
+      - name: Notify slack OK
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.CI_SLACK_TOKEN }}
+        uses: pullreminders/slack-action@master
+        with:
+          args: '{\"channel\":\"GTM2M6UGL\",\"text\":\"Pull request #${{ env.PR_NUMBER }} ${{ env.TEXT_RESULT }} for repo ${{ github.repository }} updated by ${{ github.actor }}\"}'
