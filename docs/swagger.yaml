@@ -1,0 +1,923 @@
+info:
+  title: VUI Presentation Exchange
+  version: "1.0"
+
+definitions:
+  controller.PECreationResponse:
+    properties:
+      id:
+        example: 32f54163-7166-48f1-93d8-ff217bdb0653
+        type: string
+      uri:
+        example: https://vui.gataca.io/api/presentations/v2/32f54163-7166-48f1-93d8-ff217bdb0653/definition
+        type: string
+    type: object
+  controller.SIOPSubmission:
+    properties:
+      vp_token:
+        properties:
+          format:
+            example: ldp_vp
+            type: string
+          presentation:
+            $ref: '#/definitions/models.VerifiablePresentation'
+        type: object
+    type: object
+  models.Constraints:
+    properties:
+      fields:
+        items:
+          $ref: '#/definitions/models.Field'
+        type: array
+      limit_disclosure:
+        type: boolean
+      subject_is_holder:
+        type: string
+      subject_is_issuer:
+        type: string
+    type: object
+  models.DataAgreement:
+    properties:
+      '@context':
+        $ref: '#/definitions/models.SSIContext'
+      data_holder:
+        type: string
+      data_receiver:
+        $ref: '#/definitions/models.DataReceiver'
+      data_subject:
+        type: string
+      dpia:
+        $ref: '#/definitions/models.Dpia'
+      event:
+        items:
+          $ref: '#/definitions/models.Event'
+        type: array
+      id:
+        type: string
+      personal_data:
+        items:
+          $ref: '#/definitions/models.PersonalDatum'
+        type: array
+      purposes:
+        items:
+          $ref: '#/definitions/models.Purpose'
+        type: array
+      template_id:
+        type: string
+      template_version:
+        type: string
+      termination_timestamp:
+        type: integer
+      version:
+        type: string
+    type: object
+  models.DataAgreementRef:
+    properties:
+      dataAgreement:
+        $ref: '#/definitions/models.DataAgreement'
+      ref:
+        type: string
+    type: object
+  models.DataPolicy:
+    properties:
+      data_retention_period:
+        type: integer
+      geographic_restriction:
+        type: string
+      industry_scope:
+        type: string
+      jurisdictions:
+        items:
+          type: string
+        type: array
+      policy_URL:
+        type: string
+      storage_location:
+        type: string
+    type: object
+  models.DataReceiver:
+    properties:
+      consent_duration:
+        type: integer
+      form_of_consent:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      service:
+        type: string
+      url:
+        type: string
+    type: object
+  models.Descriptor:
+    properties:
+      format:
+        type: string
+      id:
+        type: string
+      path:
+        type: string
+    required:
+    - format
+    - id
+    - path
+    type: object
+  models.Dpia:
+    properties:
+      dpia_date:
+        type: string
+      dpia_summary_url:
+        type: string
+    type: object
+  models.Event:
+    properties:
+      principle_did:
+        type: string
+      proof:
+        $ref: '#/definitions/models.SSIProof'
+      state:
+        type: string
+      timestamp:
+        type: integer
+      version:
+        type: string
+    type: object
+  models.Field:
+    properties:
+      filter:
+        $ref: '#/definitions/models.Filter'
+      path:
+        items:
+          type: string
+        type: array
+      predicate:
+        type: string
+      purpose:
+        type: string
+    required:
+    - path
+    type: object
+  models.Filter:
+    properties:
+      const: {}
+      enum:
+        items: {}
+        type: array
+      exclusiveMaximum: {}
+      exclusiveMinimum: {}
+      format:
+        type: string
+      maxLength:
+        type: integer
+      maximum: {}
+      minLength:
+        type: integer
+      minimum: {}
+      not:
+        $ref: '#/definitions/models.Filter'
+      pattern:
+        type: string
+      type:
+        type: string
+    required:
+    - type
+    type: object
+  models.Format:
+    properties:
+      jwt:
+        $ref: '#/definitions/models.JWTType'
+      jwt_vc:
+        $ref: '#/definitions/models.JWTType'
+      jwt_vp:
+        $ref: '#/definitions/models.JWTType'
+      ldp:
+        $ref: '#/definitions/models.LDPType'
+      ldp_vc:
+        $ref: '#/definitions/models.LDPType'
+      ldp_vp:
+        $ref: '#/definitions/models.LDPType'
+    type: object
+  models.InputDescriptor:
+    properties:
+      constraints:
+        $ref: '#/definitions/models.Constraints'
+      group:
+        items:
+          type: string
+        type: array
+      id:
+        type: string
+      metadata:
+        type: string
+      name:
+        type: string
+      purpose:
+        type: string
+      schema:
+        items:
+          $ref: '#/definitions/models.Schema'
+        minItems: 1
+        type: array
+    required:
+    - id
+    - schema
+    type: object
+  models.JWTType:
+    properties:
+      alg:
+        items:
+          type: string
+        type: array
+    required:
+    - alg
+    type: object
+  models.LDPType:
+    properties:
+      proof_type:
+        items:
+          type: string
+        type: array
+    required:
+    - proof_type
+    type: object
+  models.PersonalDatum:
+    properties:
+      attribute_id:
+        type: string
+      attribute_name:
+        type: string
+      attribute_sensitive:
+        type: boolean
+      purposes:
+        items:
+          type: string
+        type: array
+    type: object
+  models.PresentationDefinition:
+    properties:
+      dataAgreement:
+        $ref: '#/definitions/models.DataAgreementRef'
+      format:
+        $ref: '#/definitions/models.Format'
+      id:
+        type: string
+      input_descriptors:
+        items:
+          $ref: '#/definitions/models.InputDescriptor'
+        type: array
+      locale:
+        type: string
+      name:
+        type: string
+      proof:
+        $ref: '#/definitions/models.SSIProof'
+      purpose:
+        type: string
+      submission_requirements:
+        items:
+          $ref: '#/definitions/models.SubmissionRequirement'
+        type: array
+    required:
+    - id
+    - input_descriptors
+    type: object
+  models.PresentationSubmission:
+    properties:
+      definition_id:
+        type: string
+      descriptor_map:
+        items:
+          $ref: '#/definitions/models.Descriptor'
+        type: array
+      id:
+        type: string
+      locale:
+        type: string
+    required:
+    - definition_id
+    - descriptor_map
+    - id
+    type: object
+  models.Proof:
+    properties:
+      '@context':
+        $ref: '#/definitions/models.SSIContext'
+      cades:
+        example: 308204c906092a864886f70d010702...266ad9fee3375d8095
+        type: string
+      challenge:
+        example: TyYfomXjwPaQoSRzCZk7CxFYR8DwAigt
+        type: string
+      created:
+        example: "2019-10-01T12:12:05.999Z"
+        type: string
+      creator:
+        example: did:gatc:yyyyyyyyyyyy#keys-1
+        type: string
+      domain:
+        type: string
+      nonce:
+        example: TyYfomXjwPaQoSRzCZk7CxFYR8DwAigt
+        type: string
+      proofPurpose:
+        example: Authentication
+        type: string
+      proofValue:
+        example: bQ5AimlvOv6p5wa9pVlmjWgPMr7j9rKw_yjUL6yHlQNwnKk7HL8VQzIT0Xx
+        type: string
+      signatureValue:
+        example: bQ5AimlvOv6p5wa9pVlmjWgPMr7j9rKw_yjUL6yHlQNwnKk7HL8VQzIT0Xx
+        type: string
+      type:
+        example: Ed25519Signature2018
+        type: string
+      verificationMethod:
+        example: did:gatc:yyyyyyyyyyyy#keys-1
+        type: string
+    type: object
+  models.Purpose:
+    properties:
+      data_policy:
+        $ref: '#/definitions/models.DataPolicy'
+      id:
+        type: string
+      legal_basis:
+        type: string
+      method_of_use:
+        type: string
+      purpose_category:
+        type: string
+      purpose_description:
+        type: string
+    type: object
+  models.ResponseMessage:
+    properties:
+      message:
+        example: Some description message
+        type: string
+    type: object
+  models.SSIContext:
+    properties:
+      context:
+        type: string
+      contexts:
+        items:
+          type: string
+        type: array
+    type: object
+  models.SSIProof:
+    properties:
+      value:
+        $ref: '#/definitions/models.Proof'
+      values:
+        items:
+          $ref: '#/definitions/models.Proof'
+        type: array
+    type: object
+  models.Schema:
+    properties:
+      required:
+        type: boolean
+      uri:
+        type: string
+    type: object
+  models.SubmissionRequirement:
+    properties:
+      count:
+        minimum: 1
+        type: integer
+      from:
+        type: string
+      from_nested:
+        items:
+          $ref: '#/definitions/models.SubmissionRequirement'
+        type: array
+      max:
+        type: integer
+      min:
+        description: Can be zero
+        type: integer
+      name:
+        type: string
+      purpose:
+        type: string
+      rule:
+        type: string
+    required:
+    - rule
+    type: object
+  models.VerifiableCredential:
+    properties:
+      '@context':
+        $ref: '#/definitions/models.SSIContext'
+      credentialSchema:
+        additionalProperties:
+          type: string
+        description: Reusing the CredentialStatusType coz its the same struct here
+        type: object
+      credentialStatus:
+        additionalProperties:
+          type: string
+        type: object
+      evidence:
+        additionalProperties:
+          type: string
+        type: object
+      expirationDate:
+        example: "2019-10-01T12:12:15.999Z"
+        type: string
+      id:
+        example: cred:example:zzzzzzzzzzzz
+        type: string
+      iss:
+        type: string
+      issuanceDate:
+        example: "2019-10-01T12:12:05.999Z"
+        type: string
+      issuer:
+        example: did:example:yyyyyyyyyyyyyyyy
+        type: string
+      proof:
+        $ref: '#/definitions/models.SSIProof'
+      type:
+        example:
+        - emailCredential
+        items:
+          type: string
+        type: array
+      validFrom:
+        example: "2019-10-01T12:12:05.999Z"
+        type: string
+    type: object
+  models.VerifiablePresentation:
+    properties:
+      '@context':
+        $ref: '#/definitions/models.SSIContext'
+      data_agreement_id:
+        example: da:gatc:ehgiuwg39487wq9gf7a47af37
+        type: string
+      holder:
+        example: did:gatc:example1234567
+        type: string
+      presentation_submission:
+        $ref: '#/definitions/models.PresentationSubmission'
+      proof:
+        $ref: '#/definitions/models.SSIProof'
+      type:
+        example:
+        - VerifiablePresentation
+        items:
+          type: string
+        type: array
+      verifiableCredential:
+        items:
+          $ref: '#/definitions/models.VerifiableCredential'
+        type: array
+    type: object
+  models.VerificationResult:
+    properties:
+      checks:
+        example:
+        - '[''proof'']'
+        items:
+          type: string
+        type: array
+      errors:
+        example:
+        - '[]'
+        items:
+          type: string
+        type: array
+      warnings:
+        example:
+        - '[''Context not verified'']'
+        items:
+          type: string
+        type: array
+    type: object
+paths:
+  /api/v2/authentication_responses:
+    post:
+      consumes:
+      - application/json
+      description: A Holder may submit a verifiable presentation in response to a
+        given authentication_request in order to finish the exchange.
+      parameters:
+      - description: Verifiable Presentation token for DID SIOP
+        in: body
+        name: submission
+        required: true
+        schema:
+          $ref: '#/definitions/controller.SIOPSubmission'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Verification result.
+          schema:
+            items:
+              $ref: '#/definitions/models.VerificationResult'
+            type: array
+        "400":
+          description: Request body malformed
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "403":
+          description: Not Authorized to submit a presentation exchanges.
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "404":
+          description: Inexistent process Id
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "406":
+          description: Presentation submission not acceptable
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "409":
+          description: Process Id cannot be modified
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "500":
+          description: Serverside error processing the request.
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+      summary: Submit a Verifiable Presentation under the siop standard
+      tags:
+      - Presentations
+      
+  /api/v2/data_agreements:
+    post:
+      consumes:
+      - application/json
+      description: Create a new data agreement to record by the Verifier, in order
+        to hold the service
+      parameters:
+      - description: Data Agreement of this service
+        in: body
+        name: dataAgreement
+        required: true
+        schema:
+          $ref: '#/definitions/models.DataAgreement'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Updated Data Agreement
+          schema:
+            $ref: '#/definitions/models.DataAgreement'
+        "400":
+          description: Invalid input data.
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "403":
+          description: Not Authorized to create data agreements.
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "500":
+          description: Serverside error processing the request.
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+      summary: Create Data Agreement
+      tags:
+      - DataAgreements
+      
+  /api/v2/data_agreements/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Use case not implemented yet
+      parameters:
+      - description: Data agreement Id
+        in: path
+        required: true
+        name: id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Revocated Data Agreement
+          schema:
+            items:
+              $ref: '#/definitions/models.DataAgreement'
+            type: array
+        "404":
+          description: Inexistent process Id
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "409":
+          description: Process Id cannot be retrieved
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "500":
+          description: Serverside error processing the request.
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+      summary: Delete a current data agreement
+      tags:
+      - DataAgreements
+      
+    patch:
+      consumes:
+      - application/json
+      description: Use cases not implemented yet
+      parameters:
+      - description: Data agreement Id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Data Agreement of this service
+        in: body
+        name: dataAgreement
+        required: true
+        schema:
+          $ref: '#/definitions/models.DataAgreement'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated data agreement
+          schema:
+            items:
+              $ref: '#/definitions/models.DataAgreement'
+            type: array
+        "404":
+          description: Inexistent process Id
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "409":
+          description: Process Id cannot be retrieved
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "500":
+          description: Serverside error processing the request.
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+      summary: Modify an existing data agreement
+      tags:
+      - DataAgreements
+      
+  /api/v2/data_agreements/{id}/{version}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve the last version of a Data Agreement with all the corresponding
+        events.
+      parameters:
+      - description: Data agreement Id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'Optional: Version of the data agreement to recover. Default:
+          last'
+        in: path
+        name: version
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Data Agreement with that Id
+          schema:
+            items:
+              $ref: '#/definitions/models.DataAgreement'
+            type: array
+        "404":
+          description: Inexistent process Id
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "409":
+          description: Process Id cannot be retrieved
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "500":
+          description: Serverside error processing the request.
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+      summary: Retrieve an existing Data Agreement
+      tags:
+      - DataAgreements
+      
+  /api/v2/presentations:
+    post:
+      consumes:
+      - application/json
+      description: Create a new presentation exchange process by providing it's presentation
+        definition. Relying parties with due authentication can perform this operation.
+      parameters:
+      - description: Presentation definition of this exchange
+        in: body
+        name: presentationDefinition
+        required: true
+        schema:
+          $ref: '#/definitions/models.PresentationDefinition'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Reference to the exchange process
+          schema:
+            $ref: '#/definitions/controller.PECreationResponse'
+        "400":
+          description: Invalid input data.
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "403":
+          description: Not Authorized to create exchanges.
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "500":
+          description: Serverside error processing the request.
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+      summary: Create Presentation Exchange
+      tags:
+      - Presentations
+      
+  /api/v2/presentations/{id}:
+    get:
+      consumes:
+      - application/json
+      description: The relying party may at any time query the status of a given exchange
+        at any time to see if the data has been validated.
+      parameters:
+      - description: Presentation exchange Id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Valid verification result.
+          schema:
+            items:
+              $ref: '#/definitions/models.VerificationResult'
+            type: array
+        "202":
+          description: Pending verification result. No submission in the exchange
+            yet.
+          schema:
+            items:
+              $ref: '#/definitions/models.VerificationResult'
+            type: array
+        "400":
+          description: Process Id cannot be retrieved
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "403":
+          description: Not Authorized to retrieve the presentation exchange
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "404":
+          description: Inexistent process Id
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "406":
+          description: Presentation submission in valid
+          schema:
+            $ref: '#/definitions/models.VerificationResult'
+        "500":
+          description: Serverside error processing the request.
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+      summary: Check the status of a presentation exchange
+      tags:
+      - Presentations
+      
+  /api/v2/presentations/{id}/data_agreement:
+    get:
+      consumes:
+      - application/json
+      description: When expanding a presentation, the verifier may just offer the
+        URI to the data agreement template linked to that service
+      parameters:
+      - description: Presentation exchange Id
+        in: path
+        required: true
+        name: id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Tenant configurations requested.
+          schema:
+            items:
+              $ref: '#/definitions/models.DataAgreement'
+            type: array
+        "404":
+          description: Inexistent process Id
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "409":
+          description: Process Id cannot be retrieved
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "500":
+          description: Serverside error processing the request.
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+      summary: Get a the data agreement template of a Presentation
+      tags:
+      - Presentations
+      
+  /api/v2/presentations/{id}/definition:
+    get:
+      consumes:
+      - application/json
+      description: Upon scanning a QR, a Holder may retrieve the presentation definition
+        associated to the process identifier in order to perform an exchange.
+      parameters:
+      - description: Presentation exchange Id
+        in: path
+        required: true
+        name: id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Tenant configurations requested.
+          schema:
+            items:
+              $ref: '#/definitions/models.PresentationDefinition'
+            type: array
+        "404":
+          description: Inexistent process Id
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "409":
+          description: Process Id cannot be retrieved
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "500":
+          description: Serverside error processing the request.
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+      summary: Get a Presentation Definition
+      tags:
+      - Presentations
+      
+  /api/v2/presentations/{id}/submission:
+    post:
+      consumes:
+      - application/json
+      description: A Holder may submit a verifiable presentation in response to a
+        given definition in order to fulfill the exchange.
+      parameters:
+      - description: Presentation exchange Id
+        required: true
+        in: path
+        name: id
+        type: string
+      - description: Verifiable Presentation
+        in: body
+        name: submission
+        required: true
+        schema:
+          $ref: '#/definitions/models.VerifiablePresentation'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Verification result.
+          schema:
+            items:
+              $ref: '#/definitions/models.VerificationResult'
+            type: array
+        "400":
+          description: Request body malformed
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "403":
+          description: Not Authorized to submit a presentation exchanges.
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "404":
+          description: Inexistent process Id
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "406":
+          description: Presentation submission not acceptable
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "409":
+          description: Process Id cannot be modified
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+        "500":
+          description: Serverside error processing the request.
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+      summary: Submit a Verifiable Presentation
+      tags:
+      - Presentations
+      
+swagger: "2.0"

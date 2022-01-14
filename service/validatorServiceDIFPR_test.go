@@ -167,7 +167,7 @@ func TestDIFValidatorService_ValidateNoSubmission(t *testing.T) {
 	vp := createVerifiablePresentation(t)
 	vp.PresentationSubmission = nil
 
-	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "", "", "")
+	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "")
 	assert.Error(t, err)
 	assert.Equal(t, models.ErrInvalidFormat, err)
 	assert.Nil(t, res)
@@ -179,7 +179,7 @@ func TestDIFValidatorService_ValidateIssuerSigning(t *testing.T) {
 	log.Debugf("%+v", vp.VerifiableCredential[0].Proof)
 	vp.VerifiableCredential[0].Proof.Value.VerificationMethod = "did:example:987#keys-1"
 
-	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "", "", "")
+	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "")
 	assert.Error(t, err)
 	assert.Equal(t, models.ErrMissingConstraint, err)
 	assert.NotEmpty(t, res.Checks)
@@ -194,7 +194,7 @@ func TestDIFValidatorService_ValidateIssuerPatternConstraint(t *testing.T) {
 	vp := createVerifiablePresentation(t)
 	vp.VerifiableCredential[0].Issuer = "did:example:987"
 
-	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "", "", "")
+	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "")
 	assert.Error(t, err)
 	assert.Equal(t, models.ErrMissingConstraint, err)
 	assert.NotEmpty(t, res.Checks)
@@ -211,7 +211,7 @@ func TestDIFValidatorService_ValidateAccountIdMinLengthConstraint(t *testing.T) 
 	account1 := accounts[0].(map[string]interface{})
 	account1["id"] = "123456789" //Min 10
 
-	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "", "", "")
+	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "")
 	assert.Error(t, err)
 	assert.Equal(t, models.ErrMissingConstraint, err)
 	assert.NotEmpty(t, res.Checks)
@@ -228,7 +228,7 @@ func TestDIFValidatorService_ValidateAccountIdMaxLengthConstraint(t *testing.T) 
 	account1 := accounts[0].(map[string]interface{})
 	account1["id"] = "1234567890123" //Max 12
 
-	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "", "", "")
+	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "")
 	assert.Error(t, err)
 	assert.Equal(t, models.ErrMissingConstraint, err)
 	assert.NotEmpty(t, res.Checks)
@@ -246,7 +246,7 @@ func TestDIFValidatorService_ValidateAccountIdPatternConstraintValid(t *testing.
 	account1 := accounts[0].(map[string]interface{})
 	account1["route"] = "JP-1234567890" //Max 12
 
-	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "", "", "")
+	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "")
 	assert.NoError(t, err)
 	assert.NotEmpty(t, res.Checks)
 	assert.Empty(t, res.Errors)
@@ -261,7 +261,7 @@ func TestDIFValidatorService_ValidateAccountIdPatternConstraintInvalid(t *testin
 	account1 := accounts[0].(map[string]interface{})
 	account1["route"] = "ES-1234567890" //Must be DE or US or JP
 
-	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "", "", "")
+	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "")
 	assert.Error(t, err)
 	assert.Equal(t, models.ErrMissingConstraint, err)
 	assert.NotEmpty(t, res.Checks)
@@ -276,7 +276,7 @@ func TestDIFValidatorService_ValidatePreferred(t *testing.T) {
 	req := models.Required
 	presentationDefinition.InputDescriptors[2].Constraints.Fields[0].Predicate = &req //That predicate would be failing
 
-	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "", "", "")
+	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "")
 	assert.Error(t, err)
 	assert.Equal(t, models.ErrMissingConstraint, err)
 	assert.NotEmpty(t, res.Checks)
@@ -295,7 +295,7 @@ func TestDIFValidatorService_ValidateAccountBooleanPattern(t *testing.T) {
 	jobs1 := jobs[0].(map[string]interface{})
 	jobs1["active"] = true //Max 12
 
-	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "", "", "")
+	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "")
 	assert.NoError(t, err)
 	assert.NotEmpty(t, res.Checks)
 	assert.Empty(t, res.Errors)
@@ -309,7 +309,7 @@ func TestDIFValidatorService_ValidateMissingField(t *testing.T) {
 	paths = append(paths[0:1], paths[2:]...)
 	presentationDefinition.InputDescriptors[3].Constraints.Fields[1].Path = paths
 
-	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "", "", "")
+	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "")
 	assert.Error(t, err)
 	assert.Equal(t, models.ErrMissingConstraint, err)
 	assert.NotEmpty(t, res.Checks)
@@ -325,7 +325,7 @@ func TestDIFValidatorService_ValidateDateConstraint(t *testing.T) {
 	filter.Minimum = filter.Maximum
 	filter.Maximum = nil
 
-	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "", "", "")
+	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "")
 	assert.Error(t, err)
 	assert.Equal(t, models.ErrMissingConstraint, err)
 	assert.NotEmpty(t, res.Checks)
@@ -341,7 +341,7 @@ func TestDIFValidatorService_ValidateNoSchema(t *testing.T) {
 	vp.VerifiableCredential[0].Context = nil
 	//Should pass even if not stated explicitely. The mock json validator assumes it is a valid schema
 
-	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "", "", "")
+	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "")
 	assert.NoError(t, err)
 	assert.NotEmpty(t, res.Checks)
 	assert.Empty(t, res.Errors)
@@ -355,7 +355,7 @@ func TestDIFValidatorService_ValidateContextSchema(t *testing.T) {
 	vp.VerifiableCredential[0].Context = &models.SSIContext{
 		Context: "https://bank-schemas.org/1.0.0/accounts.json",
 	}
-	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "", "", "")
+	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "")
 	assert.NoError(t, err)
 	assert.NotEmpty(t, res.Checks)
 	assert.Empty(t, res.Errors)
@@ -369,7 +369,7 @@ func TestDIFValidatorService_ValidateWrongSchema(t *testing.T) {
 		Id: "https://schema.org/nonexisting",
 	}
 
-	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "", "", "")
+	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "")
 	assert.Error(t, err)
 	assert.Equal(t, models.ErrInvalidFormat, err)
 	assert.NotEmpty(t, res.Checks)
@@ -385,7 +385,7 @@ func TestDIFValidatorService_ValidatePossibleSchema(t *testing.T) {
 		Id: "https://bank-schemas.org/1.0.0/accounts.json",
 	}
 
-	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "", "", "")
+	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "")
 	assert.NoError(t, err)
 	assert.NotEmpty(t, res.Checks)
 	assert.Empty(t, res.Errors)
@@ -397,7 +397,7 @@ func TestDIFValidatorService_ValidateRequiredSchema(t *testing.T) {
 	vp := createVerifiablePresentation(t)
 	presentationDefinition.InputDescriptors[1].Schema[0].Required = true //The credential hasn't got the required but the optional
 
-	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "", "", "")
+	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "")
 	assert.Error(t, err)
 	assert.Equal(t, models.ErrInvalidFormat, err)
 	assert.NotEmpty(t, res.Checks)
@@ -412,7 +412,7 @@ func TestDIFValidatorService_ValidateSubmissionRequirementsCount(t *testing.T) {
 	count := 2
 	presentationDefinition.SubmissionRequirements[0].Count = &count
 
-	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "", "", "")
+	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "")
 	assert.Error(t, err)
 	assert.Equal(t, models.ErrMissingRequirement, err)
 	assert.NotEmpty(t, res.Checks)
@@ -427,7 +427,7 @@ func TestDIFValidatorService_ValidateSubmissionRequirementsMin(t *testing.T) {
 	max := 2
 	presentationDefinition.SubmissionRequirements[0].Minimum = &max
 
-	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "", "", "")
+	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "")
 	assert.Error(t, err)
 	assert.Equal(t, models.ErrMissingRequirement, err)
 	assert.NotEmpty(t, res.Checks)
@@ -441,7 +441,7 @@ func TestDIFValidatorService_ValidateSubmissionRequirementsAll(t *testing.T) {
 	vp := createVerifiablePresentation(t)
 	presentationDefinition.SubmissionRequirements[0].Rule = models.All
 
-	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "", "", "")
+	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "")
 	assert.Error(t, err)
 	assert.Equal(t, models.ErrMissingRequirement, err)
 	assert.NotEmpty(t, res.Checks)
@@ -454,7 +454,7 @@ func TestDIFValidatorService_ValidateComplete(t *testing.T) {
 	presentationDefinition := createPresentationDefinition(t)
 	vp := createVerifiablePresentation(t)
 
-	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "", "", "")
+	res, err := difValidator.ValidatePresentationResponse(nil, presentationDefinition, vp, "")
 	assert.NoError(t, err)
 	assert.NotEmpty(t, res.Checks)
 	assert.Empty(t, res.Errors)

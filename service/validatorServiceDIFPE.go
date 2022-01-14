@@ -51,7 +51,7 @@ func NewDIFValidatorService(ssiService SSIService) Validator {
 	}
 }
 
-func (vs *ValidatorServiceDIF) ValidatePresentationResponse(ctx echo.Context, preq models.ExchangeRequest, presp models.ExchangeResponse, token string, signedToken string, requesterVMethod string) (*models.VerificationResult, error) {
+func (vs *ValidatorServiceDIF) ValidatePresentationResponse(ctx echo.Context, preq models.ExchangeRequest, presp models.ExchangeResponse, requesterVMethod string) (*models.VerificationResult, error) {
 	pd := preq.ToPresentationDefinition()
 	resp := presp.ToPresentation()
 	result := &models.VerificationResult{

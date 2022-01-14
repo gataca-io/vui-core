@@ -6,7 +6,7 @@ import (
 )
 
 type VerifiablePresentation struct {
-	Context                *SSIContext             `json:"@context,omitempty" example:"https://www.w3.org/2018/credentials/v1" description:"Context for JSON-LD"`
+	Context                *SSIContext             `json:"@context,omitempty" description:"Context for JSON-LD"`
 	DataAgreementId        string                  `json:"data_agreement_id,omitempty" example:"da:gatc:ehgiuwg39487wq9gf7a47af37" description:"Id of the data agreement supporting this exchange"`
 	Holder                 *string                 `json:"holder,omitempty" example:"did:gatc:example1234567" description:"DID of the Holder of the credentials"`
 	PresentationSubmission *PresentationSubmission `json:"presentation_submission,omitempty" description:"Presentation submission according to DIF PE"`
@@ -48,7 +48,7 @@ func (v *VerifiablePresentation) ToPresentation() *VerifiablePresentation {
 }
 
 type VerifiableCredential struct {
-	Context           *SSIContext             `json:"@context,omitempty" example:"https://www.w3.org/2018/credentials/v1" description:"Context for JSON-LD"`
+	Context           *SSIContext             `json:"@context,omitempty" description:"Context for JSON-LD"`
 	CredentialSchema  *CredentialSchema       `json:"credentialSchema,omitempty" swaggertype:"object,string" description:"Definition to retrieve the schema of the credential"` //Reusing the CredentialStatusType coz its the same struct here
 	CredentialStatus  *CredentialStatus       `json:"credentialStatus,omitempty" swaggertype:"object,string" description:"Definition to retrieve the current status of the credential"`
 	CredentialSubject *map[string]interface{} `json:"credentialSubject,omitempty" swaggerignore:"true" example:"id:did_example_xxxxxxxxxxx,email:example@domain.com" description:"Claims in free format stated about the subject. Linked to the credential type."` //swagger ignore because of unexpected problems with current library
@@ -128,7 +128,7 @@ type CredentialSchema = CredentialStatus
 type Proof struct {
 	CaDES              string          `json:"cades,omitempty" example:"308204c906092a864886f70d010702...266ad9fee3375d8095" description:"Proof Value for ADes signatures" `
 	Challenge          string          `json:"challenge,omitempty" example:"TyYfomXjwPaQoSRzCZk7CxFYR8DwAigt" description:"Challenge enforcement of a nonce to avoid replay attacks."`
-	Context            *SSIContext     `json:"@context,omitempty" example:"https://www.w3.org/2018/credentials/v1" description:"Context for JSON-LD"`
+	Context            *SSIContext     `json:"@context,omitempty" description:"Context for JSON-LD"`
 	Created            *TimeWithFormat `json:"created,omitempty" swaggertype:"string" example:"2019-10-01T12:12:05.999Z" description:"Timestamp of signature of the proof"`
 	Creator            string          `json:"creator,omitempty" example:"did:gatc:yyyyyyyyyyyy#keys-1" description:"URI of the key used to sign the proof."`
 	Domain             string          `json:"domain,omitempty" description:""`

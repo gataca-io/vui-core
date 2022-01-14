@@ -47,7 +47,7 @@ func NewPresentationExchangeHandler(e *echo.Echo, exchangeService presentationex
 // @Description Create a new presentation exchange process by providing it's presentation definition. Relying parties with due authentication can perform this operation.
 // @Accept  json
 // @Produce  json
-// @Param presentationDefinition body orecoreModels.PresentationDefinition true "Presentation definition of this exchange"
+// @Param presentationDefinition body coreModels.PresentationDefinition true "Presentation definition of this exchange"
 // @Success 201 {object} PECreationResponse "Reference to the exchange process"
 // @Failure 400 {object} coreModels.ResponseMessage "Invalid input data."
 // @Failure 403 {object} coreModels.ResponseMessage "Not Authorized to create exchanges."

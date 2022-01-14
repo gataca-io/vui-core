@@ -32,7 +32,7 @@ type JSONValidator interface {
 }
 
 type Validator interface {
-	ValidatePresentationResponse(ctx echo.Context, pr models.ExchangeRequest, resp models.ExchangeResponse, token string, signedToken string, requesterVMethod string) (*models.VerificationResult, error)
+	ValidatePresentationResponse(ctx echo.Context, pr models.ExchangeRequest, resp models.ExchangeResponse, requesterVMethod string) (*models.VerificationResult, error)
 }
 
 type DidService interface {

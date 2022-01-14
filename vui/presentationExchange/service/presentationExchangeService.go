@@ -184,7 +184,7 @@ func (pes *peService) Delete(c echo.Context, id string) error {
 // ############
 
 func (pes *peService) verify(c echo.Context, pe *coreModels.PExchange) (*coreModels.VerificationResult, error) {
-	verificationResult, err := pes.validator.ValidatePresentationResponse(c, pe.PresentationDefinition, pe.PresentationSubmission, "", "", pe.PresentationDefinition.DataAgreement.DataAgreement.DataReceiver.ID)
+	verificationResult, err := pes.validator.ValidatePresentationResponse(c, pe.PresentationDefinition, pe.PresentationSubmission, pe.PresentationDefinition.DataAgreement.DataAgreement.DataReceiver.ID)
 	if err != nil {
 		return verificationResult, err
 	}
