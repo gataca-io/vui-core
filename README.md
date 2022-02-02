@@ -6,6 +6,10 @@ This is not a complete model, but it supports just the core validation logic.
 
 It provides support to any verifier that wants to integrate the validations of a full VUI Presentation Exchange.
 
+This library is the result of the efforts have been pushed under the NGI EssifLab.
+
+![Essif Lab Logo](docs/essiflabLogo.png)
+
 ## Features
 
 It holds the models for the:
