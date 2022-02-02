@@ -47,7 +47,7 @@ All the required service and respository interfaces have been defined.
 
 ## Test integration
 
-- The process to test presentation exchange is described in the [VUI Specification](https://gataca-io.github.io/verifier-apis/):
+- The process to test presentation exchange is described in the [VUI Specification](https://gataca-io.github.io/vui/):
 - The application APIs are described in the [Swagger documentation](https://gataca-io.github.io/vui-core/index.html)
 
 Having developed a complete SSI application using this library, the process to test should look like:
